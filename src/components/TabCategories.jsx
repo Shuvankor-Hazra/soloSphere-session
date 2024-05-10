@@ -1,8 +1,19 @@
+/* eslint-disable react/prop-types */
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import JobCard from './JobCard';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const TabCategories = () => {
+    const [jobs, setJobs] = useState([]);
+    useEffect(() => {
+        const getData = async () => {
+            const { data } = await axios(`${import.meta.env.VITE_API_URL}/jobs`);
+            setJobs(data);
+        }
+        getData();
+    }, [])
     return (
         <Tabs className='mb-12'>
             <div className='text-center py-6 space-y-2'>
@@ -18,13 +29,31 @@ const TabCategories = () => {
             </TabList>
 
             <TabPanel>
-                <h2><JobCard/></h2>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 '>
+                    {
+                        jobs
+                            .filter(j => j.category === 'Web Development')
+                            .map(job => <JobCard key={job._id} job={job} />)
+                    }
+                </div>
             </TabPanel>
             <TabPanel>
-                <h2>Graphics Design</h2>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 '>
+                    {
+                        jobs
+                            .filter(j => j.category === 'Graphics Design')
+                            .map(job => <JobCard key={job._id} job={job} />)
+                    }
+                </div>
             </TabPanel>
             <TabPanel>
-                <h2>Digital Marketing</h2>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 '>
+                    {
+                        jobs
+                            .filter(j => j.category === 'Digital Marketing')
+                            .map(job => <JobCard key={job._id} job={job} />)
+                    }
+                </div>
             </TabPanel>
         </Tabs>
     );
